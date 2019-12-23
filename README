@@ -1,0 +1,11 @@
+README
+
+
+This program provides a command line wrapper for Linux syscalls
+
+
+Current functionality:
+
+    - launch a programs
+    - exit from shell
+    - changing directory (not fully)
