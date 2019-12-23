@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/dir.h>
 
 
 #define ARG_LEN 16 
@@ -60,7 +61,7 @@ int shell_launch(char **arguments)
     pid_t pid, wait_pid;
     int status;
 
-    pid = fork();
+   pid = fork();
     if(pid == 0)
     {
         // child process
@@ -84,6 +85,61 @@ int shell_launch(char **arguments)
 }
 
 
+int shell_exit(char **args)
+{
+    return 0;
+}
+
+
+#define MAX_PATH_LEN 1024
+int shell_ls(char **args)
+{
+    char pathname[MAX_PATH_LEN];
+    int file_count;
+    struct direct **files;
+    if(getwd(pathname) == NULL)
+    {
+        fprintf(stderr, "Error getting path");
+    }
+    printf("Current working directory: %s", pathname);
+    
+    // edit syscall to get files and folders in current directory
+
+    return 1;
+}
+
+
+int shell_cd(char **args)
+{
+    if(args[1] == NULL)
+    {
+        fprintf(stderr, "shell: expected position argument\n");
+    }
+    else if(!chdir(args[1]))
+    {
+        perror("shell");
+    }
+    return 1;
+}
+
+
+char *shell_commands[] = 
+{
+    "exit",
+    "dir",
+    "cd"
+};
+
+
+int (*shell_functions[]) (char **) = 
+{
+    &shell_exit,
+    &shell_ls,
+    &shell_cd
+};
+
+
+
 int shell_execute(char **args)
 {
     if(args[0] == NULL)
@@ -91,6 +147,13 @@ int shell_execute(char **args)
         // empty command
         return 1;
     }    
+    for(int i = 0; i < (sizeof(shell_commands) / sizeof(char *)); i++)
+    {
+        if(!strcmp(args[0], shell_commands[i]))
+        {
+            return (*shell_functions[i]) (args);
+        }
+    }
     return shell_launch(args);
 }
 
