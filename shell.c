@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/dir.h>
+#include <sys/wait.h>
 
 
 #define ARG_LEN 16 
@@ -61,7 +62,7 @@ int shell_launch(char **arguments)
     pid_t pid, wait_pid;
     int status;
 
-   pid = fork();
+    pid = fork();
     if(pid == 0)
     {
         // child process
@@ -97,7 +98,7 @@ int shell_ls(char **args)
     char pathname[MAX_PATH_LEN];
     int file_count;
     struct direct **files;
-    if(getwd(pathname) == NULL)
+    if(getwd(pathname) == NULL) // edit a "getwd" syscall
     {
         fprintf(stderr, "Error getting path");
     }
