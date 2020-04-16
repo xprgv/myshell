@@ -5,31 +5,26 @@
 #include <sys/types.h>
 #include <sys/dir.h>
 #include <sys/wait.h>
+#include <dirent.h>
 
 
-#define ARG_LEN 16 
-#define SPLIT_SYMBOLS " \t\r\n\a"
+char *commands[] =
+{
+    "exit",
+    "cd",
+    "ls"
+};
+
+#define COUNT_OF_COMMANDS sizeof(commmands) / sizeof(char *)
+
+#define BUFFER_SIZE 1024
+#define SPLIT_SYMBOLS " \n\t\a\r"
+
+
 char **shell_split_line(char *line) 
 {
-    char **arguments = malloc(sizeof(char *) * ARG_LEN);
-    char *argument = NULL;
-    int position = 0;
-
-    if(!arguments)
-    {
-        fprintf(stderr, "memory allocation error!");
-        exit(-1);
-    }
-
-    argument = strtok(line, SPLIT_SYMBOLS);
-    while(argument != NULL)
-    {
-        arguments[position] = argument;
-        position++;
-        argument = strtok(NULL, SPLIT_SYMBOLS);
-    }
-    arguments[position] = NULL;
-    return arguments;
+    int pos = 0;
+    char *buffer = (char *)malloc(sizeof())
 }
 
 
@@ -95,16 +90,15 @@ int shell_exit(char **args)
 #define MAX_PATH_LEN 1024
 int shell_ls(char **args)
 {
-    char pathname[MAX_PATH_LEN];
-    int file_count;
-    struct direct **files;
-    if(getwd(pathname) == NULL) // edit a "getwd" syscall
+    struct dirent **namelist;
+    int n;
+    n = scandir(".", &namelist, NULL);
+    if(n == -1)
     {
-        fprintf(stderr, "Error getting path");
+        perror("error in scandir()");
+        return 0;
     }
-    printf("Current working directory: %s", pathname);
     
-    // edit syscall to get files and folders in current directory
 
     return 1;
 }
