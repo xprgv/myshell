@@ -8,3 +8,6 @@ run:
 
 start:
 	gcc main.c -o shell && ./shell
+
+
+.DEFAULT_GOAL := start
